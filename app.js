@@ -4,13 +4,26 @@ const app = express();
 
 const dotenv = require("dotenv");
 
+const connectDatabase = require("./config/database");
+
 //Setting up config.env file variables
 dotenv.config({ path: "./config/.env" });
 
+//Creating our own middleware
+const middleware = (req, res, next) => {
+  console.log("Hello from middleware");
+
+  //setting up user variable globally
+  req.user = "Jeremiah Joy Joseph";
+  next();
+};
+app.use(middleware);
+
+//Connecting to database
+connectDatabase();
+
 //Importing all routes
 const songs = require("./routes/songs");
-
-//Songs
 app.use("/api/v1", songs);
 
 const PORT = process.env.PORT;
