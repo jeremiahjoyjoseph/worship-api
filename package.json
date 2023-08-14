@@ -1,0 +1,27 @@
+{
+  "name": "worship-api",
+  "version": "1.0.0",
+  "description": "backend stuff for worship app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremiahjoyjoseph/worship-api.git"
+  },
+  "author": "Jeremiah Joy Joseph",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeremiahjoyjoseph/worship-api/issues"
+  },
+  "homepage": "https://github.com/jeremiahjoyjoseph/worship-api#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
