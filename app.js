@@ -24,6 +24,8 @@ connectDatabase();
 
 //Importing all routes
 const songs = require("./routes/songs");
+const users = require("./routes/users");
+app.use("/api/v1", users);
 app.use("/api/v1", songs);
 
 const PORT = process.env.PORT;
