@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
-const songsSchema = new mongoose.Schema(
+const SongSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -25,7 +26,6 @@ const songsSchema = new mongoose.Schema(
     youtubeLink: {
       type: String,
       trim: true,
-      required: [true, "Please provide youtube link."],
     },
     spotifyLink: {
       type: String,
@@ -38,3 +38,12 @@ const songsSchema = new mongoose.Schema(
   },
   { timestamp: true }
 );
+
+//Creating song slug before saving
+SongSchema.pre("save", function (next) {
+  //Creating slug before saving to DB
+  this.slug = slugify(this.title, { lower: true });
+  next();
+});
+
+module.exports = mongoose.model("Songs", SongSchema);

@@ -1,9 +1,6 @@
 const express = require("express");
-
 const app = express();
-
 const dotenv = require("dotenv");
-
 const connectDatabase = require("./config/database");
 
 //Setting up config.env file variables
@@ -21,6 +18,9 @@ app.use(middleware);
 
 //Connecting to database
 connectDatabase();
+
+//Setup body parser
+app.use(express.json());
 
 //Importing all routes
 const songs = require("./routes/songs");
