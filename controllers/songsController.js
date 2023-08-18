@@ -1,8 +1,10 @@
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Song = require("../models/songs");
+const ErrorHandler = require("../util/errorHandler");
 const { NOT_FOUND, SUCCESS } = require("../util/httpStatusCodes");
 
 //Get all songs => /api/v1/songs
-exports.getSongs = async (req, res, next) => {
+exports.getSongs = catchAsyncErrors(async (req, res, next) => {
   const songs = await Song.find();
 
   res.status(SUCCESS).json({
@@ -11,28 +13,25 @@ exports.getSongs = async (req, res, next) => {
     results: songs.length,
     data: songs,
   });
-};
+});
 
 //Create new song => /api/v1/songs/new
-exports.newSong = (req, res, next) => {
-  const song = Song.create(req.body);
+exports.newSong = catchAsyncErrors(async (req, res, next) => {
+  const song = await Song.create(req.body);
 
   res.status(SUCCESS).json({
     success: true,
     message: "Song has been added",
-    data: req.body,
+    data: song,
   });
-};
+});
 
 //Update song => /api/v1/songs/:id
-exports.updateSong = async (req, res, next) => {
+exports.updateSong = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.findById(req.params.id);
 
   if (!song) {
-    res.status(NOT_FOUND).json({
-      success: false,
-      message: "Song not found",
-    });
+    return next(new ErrorHandler("Song not found", NOT_FOUND));
   }
 
   song = await Song.findByIdAndUpdate(req.params.id, req.body, {
@@ -45,17 +44,14 @@ exports.updateSong = async (req, res, next) => {
     message: "Song has been updated",
     data: song,
   });
-};
+});
 
 //Delete song => /api/v1/songs/:id
-exports.deleteSong = async (req, res, next) => {
+exports.deleteSong = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.findById(req.params.id);
 
   if (!song) {
-    res.status(NOT_FOUND).json({
-      success: false,
-      message: "Song not found",
-    });
+    return next(new ErrorHandler("Song not found", NOT_FOUND));
   }
 
   song = await Song.findByIdAndDelete(req.params.id);
@@ -64,19 +60,16 @@ exports.deleteSong = async (req, res, next) => {
     message: "Song has been deleted",
     data: song,
   });
-};
+});
 
 //get song => /api/v1/songs/:id/:slug
-exports.getSong = async (req, res, next) => {
+exports.getSong = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.find({
     $and: [{ _id: req.params.id }, { slug: req.params.slug }],
   });
 
   if (!song) {
-    res.status(NOT_FOUND).json({
-      success: false,
-      message: "Song not found",
-    });
+    return next(new ErrorHandler("Song not found", NOT_FOUND));
   }
 
   res.status(SUCCESS).json({
@@ -84,4 +77,4 @@ exports.getSong = async (req, res, next) => {
     message: "Song has been found",
     data: song,
   });
-};
+});
