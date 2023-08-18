@@ -18,25 +18,8 @@ const SongSchema = new mongoose.Schema(
       required: [true, "Please enter artist name."],
       maxLength: [100, "Song artist name cannot exceed 100 characters"],
     },
-    contributor: {
-      type: [String],
-      lowercase: true,
-      trim: true,
-    },
-    youtubeLink: {
-      type: String,
-      trim: true,
-    },
-    spotifyLink: {
-      type: String,
-      trim: true,
-    },
-    chordsReferenceLink: {
-      type: String,
-      trim: true,
-    },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 //Creating song slug before saving
