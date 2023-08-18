@@ -45,3 +45,22 @@ exports.updateSong = async (req, res, next) => {
     data: song,
   });
 };
+
+//Delete song => /api/v1/songs/:id
+exports.deleteSong = async (req, res, next) => {
+  let song = await Song.findById(req.params.id);
+
+  if (!song) {
+    res.status(404).json({
+      success: false,
+      message: "Song not found",
+    });
+  }
+
+  song = await Song.findByIdAndDelete(req.params.id);
+  res.status(200).json({
+    success: true,
+    message: "Song has been deleted",
+    data: song,
+  });
+};
