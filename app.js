@@ -27,8 +27,18 @@ app.use(errorMiddleware);
 app.use(catchAsyncErrors);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(
     `Server started on port ${process.env.PORT} in ${process.env.NODE_ENV}`
   );
+});
+
+//Handling unhandled promise rejection
+
+process.on("unhandledRejection", (err) => {
+  console.log(`Error: ${err.message}`);
+  console.log("Shutting down server due to unhandled promise rejection.");
+  server.close(() => {
+    process.exit(1);
+  });
 });
