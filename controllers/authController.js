@@ -1,6 +1,7 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/users");
 const ErrorHandler = require("../util/errorHandler");
+const sendToken = require("../util/jwtToken");
 const {
   SUCCESS,
   BAD_REQUEST,
@@ -19,14 +20,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     username,
   });
 
-  //Create JWT Token
-  const token = user.getJwtToken();
-
-  res.status(SUCCESS).json({
-    success: true,
-    message: "User has been registered.",
-    token,
-  });
+  sendToken(user, SUCCESS, res);
 });
 
 //Login user => /api/v1/login
@@ -60,11 +54,5 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   }
 
   //Create JSON web token
-  const token = user.getJwtToken();
-
-  res.status(SUCCESS).json({
-    success: true,
-    message: "User is logged in.",
-    token,
-  });
+  sendToken(user, SUCCESS, res);
 });
