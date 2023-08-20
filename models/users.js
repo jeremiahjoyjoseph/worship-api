@@ -94,11 +94,15 @@ UserSchema.pre("save", function (next) {
 });
 
 //Return JSON web token
-
 UserSchema.methods.getJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRY_TIME,
   });
+};
+
+//Compare user password with database password
+UserSchema.methods.comparePassword = async function (enterPassword) {
+  return await bcrypt.compare(enterPassword, this.password);
 };
 
 module.exports = mongoose.model("Users", UserSchema);
