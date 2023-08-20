@@ -3,6 +3,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const slugify = require("slugify");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -91,5 +92,13 @@ UserSchema.pre("save", function (next) {
   this.slug = slugify(this.username, { lower: true });
   next();
 });
+
+//Return JSON web token
+
+UserSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRY_TIME,
+  });
+};
 
 module.exports = mongoose.model("Users", UserSchema);
