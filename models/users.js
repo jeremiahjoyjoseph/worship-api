@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
+const slugify = require("slugify");
 const validator = require("validator");
 
 const UserSchema = new mongoose.Schema(
@@ -31,7 +32,6 @@ const UserSchema = new mongoose.Schema(
     phNo: {
       type: String,
       trim: true,
-      required: [true, "Please enter phone number."],
     },
     username: {
       type: String,
@@ -80,9 +80,9 @@ const UserSchema = new mongoose.Schema(
 UserSchema.plugin(uniqueValidator, { message: "is already taken." });
 
 //Creating song slug before saving
-SongSchema.pre("save", function (next) {
+UserSchema.pre("save", function (next) {
   //Creating slug before saving to DB
-  this.slug = slugify(this.title, { lower: true });
+  this.slug = slugify(this.username, { lower: true });
   next();
 });
 

@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 //Importing jobs controller methods
-const { getUsers } = require("../controllers/usersController");
+const { registerUser } = require("../controllers/authController");
 
-router.route("/users").get(getUsers);
+router.route("/register").post(registerUser);
 
 module.exports = router;

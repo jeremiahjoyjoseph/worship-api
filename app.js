@@ -25,8 +25,8 @@ app.use(express.json());
 
 //Importing all routes
 const songs = require("./routes/songs");
-const users = require("./routes/users");
-app.use("/api/v1", users);
+const auth = require("./routes/auth");
+app.use("/api/v1", auth);
 app.use("/api/v1", songs);
 
 //Handling error in urls/routes
