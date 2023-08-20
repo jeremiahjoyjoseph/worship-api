@@ -4,9 +4,18 @@ const dotenv = require("dotenv");
 const connectDatabase = require("./config/database");
 const errorMiddleware = require("./middleware/errors");
 const catchAsyncErrors = require("./middleware/catchAsyncErrors");
+const ErrorHandler = require("./util/errorHandler");
+const { NOT_FOUND } = require("./util/httpStatusCodes");
 
 //Setting up config.env file variables
 dotenv.config({ path: "./config/.env" });
+
+// Handling uncaught exception
+process.on("uncaughtException", (err) => {
+  console.log(`Error: ${err.message}`);
+  console.log("Shutting down server due to uncaught exception.");
+  process.exit(1);
+});
 
 //Connecting to database
 connectDatabase();
@@ -19,6 +28,11 @@ const songs = require("./routes/songs");
 const users = require("./routes/users");
 app.use("/api/v1", users);
 app.use("/api/v1", songs);
+
+//Handling error in urls/routes
+app.all("*", (req, res, next) => {
+  next(new ErrorHandler(`${req.originalUrl} route not found.`, NOT_FOUND));
+});
 
 //Middleware to handle errors
 app.use(errorMiddleware);
