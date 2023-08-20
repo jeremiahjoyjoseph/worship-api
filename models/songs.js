@@ -8,7 +8,6 @@ const SongSchema = new mongoose.Schema(
       lowercase: true,
       required: [true, "Please enter song title."],
       trim: true,
-      maxLength: [100, "Song title cannot exceed 100 characters"],
     },
     slug: String,
     artist: {
@@ -16,7 +15,23 @@ const SongSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       required: [true, "Please enter artist name."],
-      maxLength: [100, "Song artist name cannot exceed 100 characters"],
+    },
+    lyric: {
+      type: String,
+      required: [true, "Please provide lyrics to this song"],
+    },
+    youtubeReference: {
+      type: String,
+      validate: {
+        validator: function (v) {
+          return /^https:\/\/www.youtube.com\/.*$/.test(v);
+        },
+        message: (props) => `${props.value} is not a valid youtube link.`,
+      },
+      required: [true, "Youtube video link is required."],
+    },
+    chordSheetLink: {
+      type: String,
     },
   },
   { timestamps: true }
