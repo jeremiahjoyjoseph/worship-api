@@ -6,21 +6,54 @@ const {
   SUCCESS,
   BAD_REQUEST,
   UNAUTHORIZED,
+  NOT_FOUND,
 } = require("../util/httpStatusCodes");
 
 //Register new user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, password, role, username } = req.body;
-  const user = await User.create({
+  const {
     firstName,
+    middleName,
     lastName,
     email,
     password,
     role,
     username,
+    phNo,
+  } = req.body;
+
+  const user = await User.create({
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    role,
+    username,
+    phNo,
   });
 
   sendToken(user, SUCCESS, res);
+});
+
+//Register new user => /api/v1/register
+exports.updateUsername = catchAsyncErrors(async (req, res, next) => {
+  let user = await User.findOne({ username: req.body.oldUsername });
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", NOT_FOUND));
+  }
+
+  user = await User.findByIdAndUpdate(user.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "User details have been updated",
+    data: user,
+  });
 });
 
 //Login user => /api/v1/login

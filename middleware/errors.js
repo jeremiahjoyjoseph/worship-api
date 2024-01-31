@@ -1,4 +1,8 @@
-const { NOT_FOUND, INTERNAL_SERVER_ERROR } = require("../util/httpStatusCodes");
+const {
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+  DUPLICATE_KEY,
+} = require("../util/httpStatusCodes");
 const ErrorHandler = require("../util/errorHandler");
 
 module.exports = (err, req, res, next) => {
@@ -31,7 +35,7 @@ module.exports = (err, req, res, next) => {
     }
 
     // Handle mongoose duplicate key error
-    if (err.code === 11000) {
+    if (err.code === DUPLICATE_KEY) {
       const message = `Duplicate ${Object.keys(err.keyValue)} entered.`;
       error = new ErrorHandler(message, NOT_FOUND);
     }

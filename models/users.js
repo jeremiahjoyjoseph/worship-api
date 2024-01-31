@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema(
     firstName: {
       type: String,
       lowercase: true,
-      required: [true, "Please enter first name."],
+      required: [true, "Please enter your name"],
       trim: true,
     },
     middleName: {
@@ -22,18 +22,30 @@ const UserSchema = new mongoose.Schema(
       type: String,
       lowercase: true,
       trim: true,
-      required: [true, "Please enter last name."],
     },
     email: {
       type: String,
       trim: true,
       unique: true,
-      required: [true, "Please enter email."],
-      validate: [validator.isEmail, "Please enter valid email address."],
+      required: [
+        true,
+        "Please enter your email for all the serious communication",
+      ],
+      validate: [
+        validator.isEmail,
+        "Please provide an email address that is usable",
+      ],
     },
     phNo: {
       type: String,
       trim: true,
+      minlength: 10,
+      maxlength: 10,
+      required: [
+        true,
+        "Please provide a phone number so we can get in touch with you super fast",
+      ],
+      validate: [validator.isMobilePhone, "Is this a valid phone number"],
     },
     username: {
       type: String,
@@ -43,8 +55,11 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Please enter password."],
-      minlength: [8, "Your password must be at least 8 characters long."],
+      required: [true, "Please provide a password"],
+      minlength: [
+        8,
+        "Your password must be at least 8 characters long, its for your own safety",
+      ],
       select: false, //Hidden for normal responses.
     },
     createdAt: {
@@ -56,17 +71,18 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       trim: true,
-      required: [true, "Please provide role of user."],
-      default: "guest",
+      required: [true, "Please enter your role in the team"],
       enum: {
         values: [
           "admin",
+          "worship-pastor",
           "worship-leader",
-          "worship-team",
+          "worship-team-member",
           "media-team",
           "sound-team",
           "guest",
         ],
+        default: "guest",
         message: "Please select valid role.",
       },
     },

@@ -2,7 +2,9 @@
 
 const sendToken = (user, statusCode, res) => {
   //Create JWT Token
-  const token = user.getJwtToken();
+  let token = user.getJwtToken();
+
+  token = process.env.JWT_BEARER + " " + token;
 
   //Options for cookie
   const options = {
@@ -18,8 +20,8 @@ const sendToken = (user, statusCode, res) => {
 
   res
     .status(statusCode)
-    .cookie("token", token, options)
-    .json({ success: true, token });
+    .cookie(process.env.JWT_BEARER_NAME, token, options)
+    .json({ success: true, passage: token });
 };
 
 module.exports = sendToken;
