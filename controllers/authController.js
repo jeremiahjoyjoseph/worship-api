@@ -104,10 +104,8 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  const user = await User.findOne().select("+password");
-
   //Check if password is correct
-  const isPasswordMatched = await user.comparePassword(oldPassword);
+  const isPasswordMatched = await req.user.comparePassword(oldPassword);
 
   //Check if existing and provided old password matches
   if (!isPasswordMatched) {
@@ -131,5 +129,37 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message: "Password updated",
     data: newUser,
+  });
+});
+
+//Update role
+exports.updateRole = catchAsyncErrors(async (req, res, next) => {
+  const { id, role } = req.body;
+
+  if (!id || !role) {
+    return next(
+      new ErrorHandler("Please provide required details", BAD_REQUEST)
+    );
+  }
+
+  let user = await User.findById(id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", NOT_FOUND));
+  }
+
+  user = await User.findByIdAndUpdate(
+    req.user.id,
+    { role: role },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Role updated",
+    data: user,
   });
 });

@@ -29,4 +29,9 @@ router.route("/update/username").put(isAuthenticatedUser, updateUsername);
 
 router.route("/update/password").put(isAuthenticatedUser, updatePassword);
 
+//update another users role
+router
+  .route("/update/role")
+  .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
+
 module.exports = router;
