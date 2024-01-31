@@ -7,6 +7,7 @@ const {
   loginUser,
   updateUsername,
   updatePassword,
+  updateRole,
 } = require("../controllers/authController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 

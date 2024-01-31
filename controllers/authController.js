@@ -149,7 +149,7 @@ exports.updateRole = catchAsyncErrors(async (req, res, next) => {
   }
 
   user = await User.findByIdAndUpdate(
-    req.user.id,
+    id,
     { role: role },
     {
       new: true,

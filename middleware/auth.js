@@ -51,7 +51,7 @@ exports.authorizeRoles = (role) => {
     if (!allRoles.includes(req.user.role)) {
       return next(
         new ErrorHandler(
-          `Role (${req.user.role}) is not allowed to access this resource.`,
+          `You cannot access this resource, please contact your WP for more information`,
           UNAUTHORIZED_ROLE
         )
       );
