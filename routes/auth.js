@@ -6,12 +6,13 @@ const {
   registerUser,
   loginUser,
   updateUsername,
+  updatePassword,
 } = require("../controllers/authController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 //Internal use only
 router
-  .route("/register-admin")
+  .route("/register/admin")
   .post(isAuthenticatedUser, authorizeRoles("admin"), registerUser);
 
 //Only admin and worship-pastor can register members
@@ -20,10 +21,12 @@ router
   .post(isAuthenticatedUser, authorizeRoles("worship-pastor"), registerUser);
 
 //For guest users to log in
-router.route("/register-guest").post(registerUser);
+router.route("/register/guest").post(registerUser);
 
 router.route("/login").post(loginUser);
 
-router.route("/updateUsername").put(isAuthenticatedUser, updateUsername);
+router.route("/update/username").put(isAuthenticatedUser, updateUsername);
+
+router.route("/update/password").put(isAuthenticatedUser, updatePassword);
 
 module.exports = router;

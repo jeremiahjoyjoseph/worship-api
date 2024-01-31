@@ -6,52 +6,10 @@ const {
   SUCCESS,
   BAD_REQUEST,
   UNAUTHORIZED,
-  NOT_FOUND,
 } = require("../util/httpStatusCodes");
-
-//Register new user => /api/v1/register
-exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const {
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    role,
-    username,
-    phNo,
-  } = req.body;
-
-  const user = await User.create({
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    role,
-    username,
-    phNo,
-  });
-
-  sendToken(user, SUCCESS, res);
-});
-
-//Register new user => /api/v1/register
-exports.updateUsername = catchAsyncErrors(async (req, res, next) => {
-  user = await User.findByIdAndUpdate(req.user.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  res.status(SUCCESS).json({
-    success: true,
-    message: "User details have been updated",
-    data: user,
-  });
-});
+const bcrypt = require("bcryptjs");
 
 //Login user => /api/v1/login
-
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -82,4 +40,96 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
   //Create JSON web token
   sendToken(user, SUCCESS, res);
+});
+
+//Register new user => /api/v1/register
+exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+  const {
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    role,
+    username,
+    phNo,
+  } = req.body;
+
+  const user = await User.create({
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    role,
+    username,
+    phNo,
+  });
+
+  sendToken(user, SUCCESS, res);
+});
+
+//Update username
+exports.updateUsername = catchAsyncErrors(async (req, res, next) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return next(new ErrorHandler("Please provide new username", BAD_REQUEST));
+  }
+
+  user = await User.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Username updated",
+    data: user,
+  });
+});
+
+//Update password
+exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (oldPassword === newPassword) {
+    return next(new ErrorHandler("Why are they the same?", BAD_REQUEST));
+  }
+
+  //Checks if email or password is entered by user
+  if (!oldPassword || !newPassword) {
+    return next(
+      new ErrorHandler("Please provide required fields", BAD_REQUEST)
+    );
+  }
+
+  const user = await User.findOne().select("+password");
+
+  //Check if password is correct
+  const isPasswordMatched = await user.comparePassword(oldPassword);
+
+  //Check if existing and provided old password matches
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler("Old password is incorrect", UNAUTHORIZED));
+  }
+
+  //encrypt the new password
+  const encryptNewPassword = await bcrypt.hash(newPassword, 10);
+
+  //update password
+  const newUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { password: encryptNewPassword },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Password updated",
+    data: newUser,
+  });
 });

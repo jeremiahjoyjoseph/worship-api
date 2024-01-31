@@ -2,7 +2,11 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const catchAsyncErrors = require("./catchAsyncErrors");
 const ErrorHandler = require("../util/errorHandler");
-const { UNAUTHORIZED, UNAUTHORIZED_ROLE } = require("../util/httpStatusCodes");
+const {
+  UNAUTHORIZED,
+  UNAUTHORIZED_ROLE,
+  NOT_FOUND,
+} = require("../util/httpStatusCodes");
 const roles = require("../util/roles");
 
 // Check if the user is authenticated or not
@@ -27,7 +31,13 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  req.user = await User.findById(decoded.id);
+  const user = await User.findById(decoded.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User does not exist", NOT_FOUND));
+  }
+
+  req.user = user;
 
   next();
 });
