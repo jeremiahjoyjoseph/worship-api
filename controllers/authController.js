@@ -38,13 +38,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
 //Register new user => /api/v1/register
 exports.updateUsername = catchAsyncErrors(async (req, res, next) => {
-  let user = await User.findOne({ username: req.body.oldUsername });
-
-  if (!user) {
-    return next(new ErrorHandler("User not found", NOT_FOUND));
-  }
-
-  user = await User.findByIdAndUpdate(user.id, req.body, {
+  user = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   });

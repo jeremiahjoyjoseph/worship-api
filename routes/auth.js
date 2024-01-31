@@ -10,7 +10,9 @@ const {
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 //Internal use only
-router.route("/register-admin").post(registerUser);
+router
+  .route("/register-admin")
+  .post(isAuthenticatedUser, authorizeRoles("admin"), registerUser);
 
 //Only admin and worship-pastor can register members
 router
@@ -22,8 +24,6 @@ router.route("/register-guest").post(registerUser);
 
 router.route("/login").post(loginUser);
 
-router
-  .route("/updateUsername")
-  .put(isAuthenticatedUser, authorizeRoles("sound-team"), updateUsername);
+router.route("/updateUsername").put(isAuthenticatedUser, updateUsername);
 
 module.exports = router;

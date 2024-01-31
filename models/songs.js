@@ -20,7 +20,7 @@ const SongSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide lyrics to this song"],
     },
-    youtubeReference: {
+    youtubeLink: {
       type: String,
       validate: {
         validator: function (v) {
