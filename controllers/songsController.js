@@ -17,6 +17,8 @@ exports.getSongs = catchAsyncErrors(async (req, res, next) => {
 
 //Create new song => /api/v1/songs/new
 exports.newSong = catchAsyncErrors(async (req, res, next) => {
+  req.body.createdBy = req.user.id;
+
   const song = await Song.create(req.body);
 
   res.status(SUCCESS).json({

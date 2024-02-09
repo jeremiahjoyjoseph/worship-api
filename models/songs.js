@@ -16,10 +16,6 @@ const SongSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Please enter artist name."],
     },
-    lyric: {
-      type: String,
-      required: [true, "Please provide lyrics to this song"],
-    },
     youtubeLink: {
       type: String,
       validate: {
@@ -32,6 +28,14 @@ const SongSchema = new mongoose.Schema(
     },
     chordSheetLink: {
       type: String,
+    },
+    lyricsLink: {
+      type: String,
+    },
+    createdBy: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
