@@ -163,3 +163,16 @@ exports.updateRole = catchAsyncErrors(async (req, res, next) => {
     data: user,
   });
 });
+
+//Log out user
+exports.logout = catchAsyncErrors(async (req, res, next) => {
+  res.cookie("passage", "none", {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "You have logged out successfully",
+  });
+});

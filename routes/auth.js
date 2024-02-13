@@ -8,6 +8,7 @@ const {
   updateUsername,
   updatePassword,
   updateRole,
+  logout,
 } = require("../controllers/authController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -34,5 +35,8 @@ router.route("/update/password").put(isAuthenticatedUser, updatePassword);
 router
   .route("/update/role")
   .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
+
+//update another users role
+router.route("/logout").get(isAuthenticatedUser, logout);
 
 module.exports = router;
