@@ -7,6 +7,7 @@ const errorMiddleware = require("./middleware/errors");
 const catchAsyncErrors = require("./middleware/catchAsyncErrors");
 const ErrorHandler = require("./util/errorHandler");
 const fileUpload = require("express-fileupload");
+const rateLimit = require("express-rate-limit");
 const { NOT_FOUND } = require("./util/httpStatusCodes");
 
 //Setting up config.env file variables
@@ -49,6 +50,16 @@ app.use(catchAsyncErrors);
 
 // Handle file uploads
 app.use(fileUpload());
+
+//Use rate limit NOT WORKING
+const limiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000, // 24 hrs in milliseconds
+  limit: 1,
+  message: "You have exceeded the 100 requests in 24 hrs limit!",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => {
