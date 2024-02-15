@@ -9,14 +9,21 @@ const {
   NOT_FOUND,
 } = require("../util/httpStatusCodes");
 const sendToken = require("../util/jwtToken");
+const APIFilters = require("../util/apiFilters");
 
 //Get all users => /api/v1/user/all
 exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
-  let user = await User.find();
+  const apiFilters = new APIFilters(User.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .pagination();
+
+  const users = await apiFilters.query;
 
   res.status(SUCCESS).json({
     success: true,
-    data: user,
+    data: users,
   });
 });
 

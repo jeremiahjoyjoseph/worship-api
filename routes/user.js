@@ -14,27 +14,23 @@ const {
   deleteSelf,
 } = require("../controllers/UserController");
 
-//getUserProfile
 router.route("/user/data").get(isAuthenticatedUser, getUserProfile);
 
-//getUserProfile
 router.route("/user/all").get(isAuthenticatedUser, getAllUsers);
 
 router.route("/user/update/username").put(isAuthenticatedUser, updateUsername);
 
 router.route("/user/update/password").put(isAuthenticatedUser, updatePassword);
 
-//update another users role
+router.route("/user/delete").delete(isAuthenticatedUser, deleteSelf);
+
+//Worship pastor and above only
 router
   .route("/user/update/role")
   .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
 
-//delete any user
 router
   .route("/user/delete/:id")
   .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteUser);
-
-//delete own account
-router.route("/user/delete").delete(isAuthenticatedUser, deleteSelf);
 
 module.exports = router;
