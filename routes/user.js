@@ -11,6 +11,7 @@ const {
   updateRole,
   deleteUser,
   getAllUsers,
+  deleteSelf,
 } = require("../controllers/UserController");
 
 //getUserProfile
@@ -30,9 +31,12 @@ router
   .route("/user/update/role")
   .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
 
-//deleteUser
+//delete any user
 router
-  .route("/user/delete")
+  .route("/user/delete/:id")
   .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteUser);
+
+//delete own account
+router.route("/user/delete").delete(isAuthenticatedUser, deleteSelf);
 
 module.exports = router;

@@ -97,9 +97,19 @@ exports.updateRole = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//delate user => /api/v1/user/delete
+//delate any user => /api/v1/user/delete/:id
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
-  await User.findOneAndDelete({ username: req.body.username });
+  await User.findOneAndDelete({ username: req.params.id });
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "This account has been deleted",
+  });
+});
+
+//delate self account => /api/v1/user/delete
+exports.deleteSelf = catchAsyncErrors(async (req, res, next) => {
+  await User.findOneAndDelete({ username: req.user.id });
 
   res.cookie("passage", "none", {
     expires: new Date(Date.now()),

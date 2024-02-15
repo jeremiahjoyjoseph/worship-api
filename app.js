@@ -6,6 +6,7 @@ const connectDatabase = require("./config/database");
 const errorMiddleware = require("./middleware/errors");
 const catchAsyncErrors = require("./middleware/catchAsyncErrors");
 const ErrorHandler = require("./util/errorHandler");
+const fileUpload = require("express-fileupload");
 const { NOT_FOUND } = require("./util/httpStatusCodes");
 
 //Setting up config.env file variables
@@ -45,6 +46,9 @@ app.use(errorMiddleware);
 
 //Middleware to handle async errors
 app.use(catchAsyncErrors);
+
+// Handle file uploads
+app.use(fileUpload());
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => {

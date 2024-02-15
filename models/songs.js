@@ -32,7 +32,7 @@ const SongSchema = new mongoose.Schema(
     lyricsLink: {
       type: String,
     },
-    lyrics: {
+    lyricsFileName: {
       type: String,
     },
     createdBy: {
@@ -47,7 +47,7 @@ const SongSchema = new mongoose.Schema(
 //Creating song slug before saving
 SongSchema.pre("save", function (next) {
   //Creating slug before saving to DB
-  this.slug = slugify(this.title, { lower: true });
+  this.slug = slugify(`${this.title}_${this.artist}`, { lower: true });
   next();
 });
 

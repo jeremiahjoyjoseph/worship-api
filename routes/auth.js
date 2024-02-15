@@ -22,6 +22,7 @@ router
 //For guest users to log in
 router.route("/register/guest").post(registerUser);
 
+//login the user
 router.route("/login").post(loginUser);
 
 //update another users role

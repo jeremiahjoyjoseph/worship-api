@@ -1,7 +1,12 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Song = require("../models/songs");
 const ErrorHandler = require("../util/errorHandler");
-const { NOT_FOUND, SUCCESS } = require("../util/httpStatusCodes");
+const {
+  NOT_FOUND,
+  SUCCESS,
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+} = require("../util/httpStatusCodes");
 
 //Get all songs => /api/v1/songs
 exports.getSongs = catchAsyncErrors(async (req, res, next) => {
@@ -17,14 +22,73 @@ exports.getSongs = catchAsyncErrors(async (req, res, next) => {
 
 //Create new song => /api/v1/songs/new
 exports.newSong = catchAsyncErrors(async (req, res, next) => {
+  let song = Song.find({ title: req.body.title, artist: req.body.artist });
   req.body.createdBy = req.user.id;
-
-  const song = await Song.create(req.body);
+  song = await Song.create(req.body);
 
   res.status(SUCCESS).json({
     success: true,
     message: "Song has been added",
     data: song,
+  });
+});
+
+//Create new song => /api/v1/songs/upload-lyrics/:id
+exports.uploadLyrics = catchAsyncErrors(async (req, res, next) => {
+  let song = await Song.findById(req.params.id);
+
+  if (!song) {
+    return next(new ErrorHandler("Song not found", BAD_REQUEST));
+  }
+
+  // Check the files
+  if (!req.files) {
+    return next(new ErrorHandler("Please upload file", BAD_REQUEST));
+  }
+
+  const file = req.files.file;
+
+  // Check file type
+  const supportedFiles = /.docx|.pdf/;
+  if (!supportedFiles.test(path.extname(file.name))) {
+    return next(new ErrorHandler("Please upload document file", BAD_REQUEST));
+  }
+
+  // Check document size
+  if (file.size > process.env.MAX_FILE_SIZE) {
+    return next(
+      new ErrorHandler("Please upload file less than 2MB", BAD_REQUEST)
+    );
+  }
+
+  // Renaming lyrics doc
+  file.name = `${song.title}_${song.artist}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async (err) => {
+    if (err) {
+      console.log(err);
+      return next(
+        new ErrorHandler("Lyrics doc upload failed", INTERNAL_SERVER_ERROR)
+      );
+    }
+
+    await Song.findByIdAndUpdate(
+      req.params.id,
+      {
+        lyricsFileName: file.name,
+      },
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+    );
+
+    res.status(SUCCESS).json({
+      success: true,
+      message: "lyrics document uploaded successfully",
+      data: file.name,
+    });
   });
 });
 
