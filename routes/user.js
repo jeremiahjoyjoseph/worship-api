@@ -18,9 +18,7 @@ const {
 router.route("/user/data").get(isAuthenticatedUser, getUserProfile);
 
 //getUserProfile
-router
-  .route("/user/all")
-  .get(isAuthenticatedUser, authorizeRoles("admin"), getAllUsers);
+router.route("/user/all").get(isAuthenticatedUser, getAllUsers);
 
 router.route("/user/update/username").put(isAuthenticatedUser, updateUsername);
 

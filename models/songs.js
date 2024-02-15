@@ -24,7 +24,7 @@ const SongSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} is not a valid youtube link.`,
       },
-      required: [true, "Youtube video link is required."],
+      // required: [true, "Youtube video link is required."],
     },
     chordSheetLink: {
       type: String,

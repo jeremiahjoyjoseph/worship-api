@@ -1,10 +1,12 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/users");
+const Song = require("../models/songs");
 const ErrorHandler = require("../util/errorHandler");
 const {
   SUCCESS,
   BAD_REQUEST,
   UNAUTHORIZED,
+  NOT_FOUND,
 } = require("../util/httpStatusCodes");
 const sendToken = require("../util/jwtToken");
 
@@ -99,17 +101,28 @@ exports.updateRole = catchAsyncErrors(async (req, res, next) => {
 
 //delate any user => /api/v1/user/delete/:id
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
-  await User.findOneAndDelete({ username: req.params.id });
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(
+      new ErrorHandler(`User not found with id: ${req.params.id}`, NOT_FOUND)
+    );
+  }
+
+  deleteUserData(user.id, user.role);
+  await user.remove();
 
   res.status(SUCCESS).json({
     success: true,
-    message: "This account has been deleted",
+    message: "This account has been deleted by your admin",
   });
 });
 
 //delate self account => /api/v1/user/delete
 exports.deleteSelf = catchAsyncErrors(async (req, res, next) => {
-  await User.findOneAndDelete({ username: req.user.id });
+  await User.findByIdAndDelete(req.user.id);
+
+  deleteUserData(req.user.id, req.user.role);
 
   res.cookie("passage", "none", {
     expires: new Date(Date.now()),
@@ -118,6 +131,11 @@ exports.deleteSelf = catchAsyncErrors(async (req, res, next) => {
 
   res.status(SUCCESS).json({
     success: true,
-    message: "This account has been deleted",
+    message: "Your account has been deleted",
   });
 });
+
+// Delete songs created by user
+async function deleteUserData(user, role) {
+  await Song.deleteMany({ createdBy: user });
+}

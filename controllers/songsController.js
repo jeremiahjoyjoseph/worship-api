@@ -23,6 +23,11 @@ exports.getSongs = catchAsyncErrors(async (req, res, next) => {
 //Create new song => /api/v1/songs/new
 exports.newSong = catchAsyncErrors(async (req, res, next) => {
   let song = Song.find({ title: req.body.title, artist: req.body.artist });
+
+  if (song) {
+    return next(new ErrorHandler("Song already exists", BAD_REQUEST));
+  }
+
   req.body.createdBy = req.user.id;
   song = await Song.create(req.body);
 
@@ -112,7 +117,7 @@ exports.updateSong = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Delete song => /api/v1/songs/:id
+//Delete song => /api/v1/song/delete/:id
 exports.deleteSong = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.findById(req.params.id);
 
@@ -120,18 +125,18 @@ exports.deleteSong = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Song not found", NOT_FOUND));
   }
 
-  song = await Song.findByIdAndDelete(req.params.id);
+  await Song.findByIdAndDelete(req.params.id);
+
   res.status(SUCCESS).json({
     success: true,
     message: "Song has been deleted",
-    data: song,
   });
 });
 
 //get song => /api/v1/songs/:id/:slug
 exports.getSong = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.find({
-    $and: [{ _id: req.params.id }, { slug: req.params.slug }],
+    $and: [{ _id: req.params.id }, { title: req.params.title }],
   });
 
   if (!song) {
