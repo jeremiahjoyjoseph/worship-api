@@ -5,9 +5,6 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  updateUsername,
-  updatePassword,
-  updateRole,
   logout,
 } = require("../controllers/authController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
@@ -26,15 +23,6 @@ router
 router.route("/register/guest").post(registerUser);
 
 router.route("/login").post(loginUser);
-
-router.route("/update/username").put(isAuthenticatedUser, updateUsername);
-
-router.route("/update/password").put(isAuthenticatedUser, updatePassword);
-
-//update another users role
-router
-  .route("/update/role")
-  .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
 
 //update another users role
 router.route("/logout").get(isAuthenticatedUser, logout);

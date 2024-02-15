@@ -30,8 +30,10 @@ app.use(cookieParser());
 //Importing all routes
 const songs = require("./routes/songs");
 const auth = require("./routes/auth");
+const user = require("./routes/user");
 app.use("/api/v1", auth);
 app.use("/api/v1", songs);
+app.use("/api/v1", user);
 
 //Handling error in urls/routes
 app.all("*", (req, res, next) => {

@@ -32,6 +32,9 @@ const SongSchema = new mongoose.Schema(
     lyricsLink: {
       type: String,
     },
+    lyrics: {
+      type: String,
+    },
     createdBy: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
