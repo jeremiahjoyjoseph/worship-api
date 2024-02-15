@@ -20,9 +20,9 @@ exports.getSongs = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Create new song => /api/v1/songs/new
+//Create new song => /api/v1/song/new
 exports.newSong = catchAsyncErrors(async (req, res, next) => {
-  let song = Song.find({ title: req.body.title, artist: req.body.artist });
+  let song = await Song.findOne({ title: req.body.title });
 
   if (song) {
     return next(new ErrorHandler("Song already exists", BAD_REQUEST));
@@ -38,7 +38,7 @@ exports.newSong = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Create new song => /api/v1/songs/upload-lyrics/:id
+//Upload lyrics to the song => /api/v1/songs/upload-lyrics/:id
 exports.uploadLyrics = catchAsyncErrors(async (req, res, next) => {
   let song = await Song.findById(req.params.id);
 
