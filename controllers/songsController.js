@@ -1,3 +1,4 @@
+const path = require("path");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Song = require("../models/songs");
 const ErrorHandler = require("../util/errorHandler");
@@ -67,7 +68,9 @@ exports.uploadLyrics = catchAsyncErrors(async (req, res, next) => {
   }
 
   // Renaming lyrics doc
-  file.name = `${song.title}_${song.artist}${path.parse(file.name).ext}`;
+  file.name = `${song.title}_${song.artist}_${req.params.id}${
+    path.parse(file.name).ext
+  }`;
 
   file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async (err) => {
     if (err) {

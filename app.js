@@ -25,13 +25,16 @@ process.on("uncaughtException", (err) => {
 //Connecting to database
 connectDatabase();
 
+//Setup security headers
+app.use(helmet());
+
 //Setup body parser
 app.use(express.json());
 
 //Set cookie parser
 app.use(cookieParser());
 
-// Handle file uploads
+//for file uploads
 app.use(fileUpload());
 
 //Use rate limit NOT WORKING
@@ -43,9 +46,6 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use(limiter);
-
-//Setup security headers
-app.use(helmet());
 
 //Importing all routes
 const songs = require("./routes/songs");
