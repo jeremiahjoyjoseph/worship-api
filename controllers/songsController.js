@@ -1,6 +1,6 @@
 const path = require("path");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const Song = require("../models/songs");
+const Song = require("../models/song");
 const ErrorHandler = require("../util/errorHandler");
 const {
   NOT_FOUND,

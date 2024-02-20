@@ -1,5 +1,5 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const User = require("../models/users");
+const User = require("../models/user");
 const ErrorHandler = require("../util/errorHandler");
 const sendToken = require("../util/jwtToken");
 const {

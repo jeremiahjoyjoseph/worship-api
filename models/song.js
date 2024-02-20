@@ -51,4 +51,4 @@ SongSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("Songs", SongSchema);
+module.exports = mongoose.model("Song", SongSchema);

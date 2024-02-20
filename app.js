@@ -48,12 +48,12 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //Importing all routes
-const songs = require("./routes/songs");
+const song = require("./routes/song");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 
 app.use("/api/v1", auth);
-app.use("/api/v1", songs);
+app.use("/api/v1", song);
 app.use("/api/v1", user);
 
 //Handling error in urls/routes

@@ -221,4 +221,4 @@ UserSchema.methods.comparePassword = async function (enterPassword) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
-module.exports = mongoose.model("Users", UserSchema);
+module.exports = mongoose.model("User", UserSchema);
