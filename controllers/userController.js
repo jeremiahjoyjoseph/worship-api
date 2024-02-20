@@ -142,6 +142,27 @@ exports.deleteSelf = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+//Update user data wp and above => /api/v1/user/update/data/:id
+exports.updateUserData = catchAsyncErrors(async (req, res, next) => {
+  let body = req.body;
+
+  //convert dob to date type
+  if (body.dob) {
+    body.dob = moment(body.dob, process.env.FE_DATE_FORMAT).format();
+  }
+
+  user = await User.findByIdAndUpdate(req.params.id, body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "User updated",
+    data: user,
+  });
+});
+
 // Delete songs created by user
 async function deleteUserData(user, role) {
   await Song.deleteMany({ createdBy: user });
