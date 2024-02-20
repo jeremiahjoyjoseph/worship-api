@@ -7,6 +7,7 @@ const {
   BAD_REQUEST,
   UNAUTHORIZED,
 } = require("../util/httpStatusCodes");
+const moment = require("moment");
 
 //Login user => /api/v1/login
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
@@ -43,26 +44,15 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
 //Register new user => /api/v1/register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const {
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    role,
-    username,
-    phNo,
-  } = req.body;
+  let body = req.body;
+
+  //convert dob to date type
+  if (body.dob) {
+    body.dob = moment(body.dob, process.env.FE_DATE_FORMAT).format();
+  }
 
   const user = await User.create({
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    role,
-    username,
-    phNo,
+    ...body,
   });
 
   sendToken(user, SUCCESS, res);

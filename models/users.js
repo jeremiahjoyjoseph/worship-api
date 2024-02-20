@@ -66,8 +66,6 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    resetPasswordToken: String,
-    resetPasswordExpire: Date,
     role: {
       type: String,
       trim: true,
@@ -147,9 +145,9 @@ const UserSchema = new mongoose.Schema(
       default: false,
     },
     status: {
-      type: Date,
+      type: String,
       trim: true,
-      required: [true, "please enter current status of team member"],
+      required: [true, "Please enter current status of team member"],
       enum: {
         values: ["active", "inactive"],
         message: "Please select available status",
@@ -159,7 +157,16 @@ const UserSchema = new mongoose.Schema(
     locationPrimary: {
       type: String,
       trim: true,
-      required: [true, "Please enter primary location"],
+      required: [
+        function () {
+          return (
+            this.role === "worship-team-member" ||
+            this.role === "worship-leader" ||
+            this.role === "worship-pastor"
+          );
+        },
+        "Please enter primary location",
+      ],
       enum: {
         values: ["central", "north", "south", "east", "west"],
         message: "Please select valid location",
@@ -182,6 +189,8 @@ const UserSchema = new mongoose.Schema(
       },
     },
     slug: String,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   { timestamps: true }
 );
