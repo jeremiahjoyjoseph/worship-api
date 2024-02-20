@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema(
         "Please provide an email address that is usable",
       ],
     },
-    phNo: {
+    phone: {
       type: String,
       trim: true,
       minlength: 10,
@@ -89,6 +89,97 @@ const UserSchema = new mongoose.Schema(
     lastLogInDate: {
       type: Date,
       select: false,
+    },
+    wtRolePrimary: {
+      type: String,
+      trim: true,
+      required: [
+        function () {
+          return (
+            this.role === "worship-team-member" ||
+            this.role === "worship-leader" ||
+            this.role === "worship-pastor"
+          );
+        },
+        "Please enter primary role in worship team",
+      ],
+      enum: {
+        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        message: "Please select valid worship team role.",
+      },
+    },
+    wtRoleSecondary: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        message: "Please select valid worship team role.",
+      },
+    },
+    wtRoleSpare: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        message: "Please select valid worship team role.",
+      },
+    },
+    gender: {
+      type: String,
+      trim: true,
+      required: [true, "Please choose a gender"],
+      enum: {
+        values: ["male", "female"],
+        message: "Please choose relevant gender.",
+      },
+    },
+    dob: {
+      type: Date,
+      trim: true,
+      required: [true, "please enter date of birth"],
+      enum: {
+        values: ["male", "female"],
+        message: "Please choose relevant gender.",
+      },
+    },
+    md: {
+      type: Boolean,
+      default: false,
+    },
+    status: {
+      type: Date,
+      trim: true,
+      required: [true, "please enter current status of team member"],
+      enum: {
+        values: ["active", "inactive"],
+        message: "Please select available status",
+      },
+      default: "active",
+    },
+    locationPrimary: {
+      type: String,
+      trim: true,
+      required: [true, "Please enter primary location"],
+      enum: {
+        values: ["central", "north", "south", "east", "west"],
+        message: "Please select valid location",
+      },
+    },
+    locationSecondary: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ["central", "north", "south", "east", "west"],
+        message: "Please select valid location",
+      },
+    },
+    locationSpare: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ["central", "north", "south", "east", "west"],
+        message: "Please select valid location",
+      },
     },
     slug: String,
   },
