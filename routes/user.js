@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-//Importing controller methods
-
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 const {
   getUserProfile,

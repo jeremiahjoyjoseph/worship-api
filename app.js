@@ -51,10 +51,12 @@ app.use(limiter);
 const song = require("./routes/song");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
+const roster = require("./routes/roster");
 
 app.use("/api/v1", auth);
 app.use("/api/v1", song);
 app.use("/api/v1", user);
+app.use("/api/v1", roster);
 
 //Handling error in urls/routes
 app.all("*", (req, res, next) => {

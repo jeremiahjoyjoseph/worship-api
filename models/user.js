@@ -202,7 +202,7 @@ UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-//Creating song slug before saving
+//Creating user slug before saving
 UserSchema.pre("save", function (next) {
   //Creating slug before saving to DB
   this.slug = slugify(this.username, { lower: true });

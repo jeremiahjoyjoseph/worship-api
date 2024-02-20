@@ -1,34 +1,28 @@
 const mongoose = require("mongoose");
-const slugify = require("slugify");
 
-const RosterSchema = new mongoose.Schema(
-  {
-    month: {
-      type: Date,
-      required: [true, "Please enter the month and year of the roster"],
+const worshipTeam = mongoose.Schema({
+  id: String,
+  name: String,
+  wtPrimaryRole: {
+    type: String,
+    trim: true,
+    enum: {
+      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+      message: "Please select valid worship team role.",
     },
-    sundaysOfMonth: [sundaysOfMonth],
-    submissions: [submissions],
-    roster: { plannedRoster },
   },
-  { timestamps: true }
-);
-
-const sundaysOfMonth = new mongoose.Schema({
-  sermonTopic: {
+  wtSecondaryRole: {
     type: String,
+    trim: true,
+    enum: {
+      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+      message: "Please select valid worship team role.",
+    },
   },
-  sundayDate: {
-    type: Date,
+  isMd: {
+    type: Boolean,
+    default: false,
   },
-});
-
-const submissions = new mongoose.Schema({
-  id: {
-    type: String,
-  },
-  hasSubmittedDates: { type: Boolean, default: false },
-  submittedDates: [sundaysOfMonth],
 });
 
 const plannedRoster = mongoose.Schema({
@@ -43,31 +37,34 @@ const plannedRoster = mongoose.Schema({
   worshipTeam: { worshipTeam },
 });
 
-const worshipTeam = mongoose.Schema({
-  id: String,
-  name: String,
-  wtPrimaryRole: {
+const sundaysOfMonth = new mongoose.Schema({
+  sermonTopic: {
     type: String,
-    trim: true,
-    required: [true, "Please enter primary role in worship team this Sunday"],
-    enum: {
-      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
-      message: "Please select valid worship team role.",
-    },
   },
-  wtSecondaryRole: {
+  sundayDate: {
     type: String,
-    trim: true,
-    required: [true, "Please enter secondary role in worship team this Sunday"],
-    enum: {
-      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
-      message: "Please select valid worship team role.",
-    },
-  },
-  isMd: {
-    type: Boolean,
-    default: false,
   },
 });
+
+const submissions = new mongoose.Schema({
+  id: {
+    type: String,
+  },
+  hasSubmittedDates: { type: Boolean, default: false },
+  submittedDates: [sundaysOfMonth],
+});
+
+const RosterSchema = new mongoose.Schema(
+  {
+    month: {
+      type: String,
+      required: [true, "Please enter the month and year of the roster"],
+    },
+    sundaysOfMonth: [sundaysOfMonth],
+    submissions: [submissions],
+    roster: { plannedRoster },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Roster", RosterSchema);
