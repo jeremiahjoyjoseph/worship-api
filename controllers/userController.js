@@ -57,9 +57,10 @@ exports.updateUsername = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Update password => /api/v1/user/update/password
+//Update password => /api/v1/user/update/password && /api/v1/user/update/password/:id
 exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
-  const user = await User.findById(req.user.id).select("+password");
+  let userId = req.params.id || req.user.id;
+  const user = await User.findById(userId).select("+password");
 
   // Check previous user password
   const isMatched = await user.comparePassword(req.body.currentPassword);
@@ -70,7 +71,20 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
   user.password = req.body.newPassword;
   await user.save();
 
-  sendToken(user, SUCCESS, res);
+  if (req.params.id) {
+    res.status(SUCCESS).json({
+      success: true,
+      message: "Password has been reset for the user specified",
+      data: user,
+    });
+  } else {
+    sendToken(
+      user,
+      SUCCESS,
+      res,
+      "Password has been reset, please re-login to continue"
+    );
+  }
 });
 
 //Update role => /api/v1/user/update/role

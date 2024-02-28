@@ -24,6 +24,9 @@ router
   .route("/user/update/role")
   .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updateRole);
 router
+  .route("/user/update/password/:id")
+  .put(isAuthenticatedUser, authorizeRoles("worship-pastor"), updatePassword);
+router
   .route("/user/delete/:id")
   .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteUser);
 router
