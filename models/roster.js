@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("../models/user");
 
 const worshipTeam = mongoose.Schema({
   id: String,
@@ -25,7 +26,7 @@ const worshipTeam = mongoose.Schema({
   },
 });
 
-const plannedRoster = mongoose.Schema({
+const plannedLocationRoster = mongoose.Schema({
   location: {
     type: String,
     trim: true,
@@ -37,21 +38,27 @@ const plannedRoster = mongoose.Schema({
   worshipTeam: { worshipTeam },
 });
 
-const sundaysOfMonth = new mongoose.Schema({
+const requiredDates = new mongoose.Schema({
+  eventName: {
+    type: String,
+    trim: true,
+    enum: {
+      values: ["sunday", "kids-conference", "bible-college", "other"],
+      message: "Event name is not available",
+    },
+  },
   sermonTopic: {
     type: String,
   },
-  sundayDate: {
+  eventDate: {
     type: String,
   },
 });
 
 const submissions = new mongoose.Schema({
-  id: {
-    type: String,
-  },
+  userId: String,
   hasSubmittedDates: { type: Boolean, default: false },
-  submittedDates: [sundaysOfMonth],
+  submittedDates: [requiredDates],
 });
 
 const RosterSchema = new mongoose.Schema(
@@ -60,9 +67,9 @@ const RosterSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter the month and year of the roster"],
     },
-    sundaysOfMonth: [sundaysOfMonth],
+    requiredDates: [requiredDates],
     submissions: [submissions],
-    roster: { plannedRoster },
+    roster: [plannedLocationRoster],
   },
   { timestamps: true }
 );
