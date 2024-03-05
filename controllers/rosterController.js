@@ -17,8 +17,8 @@ const moment = require("moment");
 exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   let body = req.body;
 
+  //retrieve all users and create slots in roster.submissions
   let users = await User.find();
-
   let submissions = [];
   users.forEach((user) => {
     if (user.status === "active") {
@@ -31,6 +31,7 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
   body.submissions = submissions;
 
+  //create roster
   let roster = await Roster.create({
     ...body,
   });
