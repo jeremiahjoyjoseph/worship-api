@@ -9,10 +9,10 @@ const {
 
 //Team members
 router
-  .route("/roster/availability")
+  .route("/roster/availability/:id")
   .post(
     isAuthenticatedUser,
-    authorizeRoles("worship-pastor"),
+    authorizeRoles("worship-team-member"),
     submitAvailability
   );
 

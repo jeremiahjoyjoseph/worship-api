@@ -52,6 +52,7 @@ const requiredDates = new mongoose.Schema({
   },
   eventDate: {
     type: String,
+    required: true,
   },
 });
 
@@ -67,6 +68,7 @@ const RosterSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter the month and year of the roster"],
     },
+    name: String,
     requiredDates: [requiredDates],
     submissions: [submissions],
     roster: [plannedLocationRoster],
