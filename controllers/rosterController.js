@@ -85,3 +85,38 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
     data: newRoster,
   });
 });
+
+//Get all rosters  => /roster/all
+exports.getAllRosters = catchAsyncErrors(async (req, res, next) => {
+  //lets get the roster first
+  let rosters = await Roster.find();
+  if (!rosters) {
+    return next(new ErrorHandler("No rosters available", NOT_FOUND));
+  }
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "All rosters currently in data",
+    data: rosters,
+  });
+});
+
+//Get all rosters  => /roster/:id or param "month"
+exports.getRoster = catchAsyncErrors(async (req, res, next) => {
+  //lets get the roster first
+  let roster;
+  if (req.params.id) {
+    roster = await Roster.findById(id);
+  } else if (req.params.month) {
+    roster = await Roster.find();
+  }
+  if (!roster) {
+    return next(new ErrorHandler("No roster available", NOT_FOUND));
+  }
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Here is the roster",
+    data: roster,
+  });
+});
