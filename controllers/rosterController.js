@@ -43,10 +43,19 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Every individual submits their availability  => /roster/availability/:id
+//Every individual submits their availability  => /roster/availability/:rosterId
 exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
+  if (!req.params.rosterId) {
+    return next(
+      new ErrorHandler(
+        "Link is corrupted, please ask WP for a new link",
+        NOT_FOUND
+      )
+    );
+  }
+
   //lets get the roster first
-  let roster = await Roster.findById(req.params.id);
+  let roster = await Roster.findById(req.params.rosterId);
   if (!roster) {
     return next(new ErrorHandler("Roster not found", NOT_FOUND));
   }

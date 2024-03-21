@@ -21,7 +21,7 @@ router
   .route("/roster")
   .get(isAuthenticatedUser, authorizeRoles("worship-team-member"), getRoster);
 router
-  .route("/roster/availability/:id")
+  .route("/roster/availability/:rosterId")
   .post(
     isAuthenticatedUser,
     authorizeRoles("worship-team-member"),
