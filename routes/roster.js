@@ -18,7 +18,7 @@ router
     getAllRosters
   );
 router
-  .route("/roster/:id")
+  .route("/roster")
   .get(isAuthenticatedUser, authorizeRoles("worship-team-member"), getRoster);
 router
   .route("/roster/availability/:id")

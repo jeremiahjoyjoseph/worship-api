@@ -101,14 +101,15 @@ exports.getAllRosters = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Get all rosters  => /roster/:id or param "month"
+//Get roster  => /roster or through query month or id
 exports.getRoster = catchAsyncErrors(async (req, res, next) => {
   //lets get the roster first
   let roster;
-  if (req.params.id) {
-    roster = await Roster.findById(id);
-  } else if (req.params.month) {
-    roster = await Roster.find();
+
+  if (req.query.id) {
+    roster = await Roster.findById(req.query.id);
+  } else if (req.query.month) {
+    roster = await Roster.find({ month: req.query.month });
   }
   if (!roster) {
     return next(new ErrorHandler("No roster available", NOT_FOUND));

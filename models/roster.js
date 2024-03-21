@@ -67,6 +67,7 @@ const RosterSchema = new mongoose.Schema(
     month: {
       type: String,
       required: [true, "Please enter the month and year of the roster"],
+      unique: true,
     },
     name: String,
     requiredDates: [requiredDates],
