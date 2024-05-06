@@ -78,7 +78,7 @@ const RosterSchema = new mongoose.Schema(
       ],
       unique: true,
     },
-    requiredDates: [requiredDates],
+    requiredDates: [requiredDatesSchema],
     datesGiven: [datesGivenSchema],
     roster: [locationRosterSchema],
     giveDatesUsingUrl: {

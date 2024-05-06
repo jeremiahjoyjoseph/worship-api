@@ -7,7 +7,7 @@ const {
   UNAUTHORIZED_ROLE,
   NOT_FOUND,
 } = require("../util/httpStatusCodes");
-const roles = require("../util/roles");
+const { permissionRef } = require("../util/roles");
 
 // Check if the user is authenticated or not
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
@@ -44,7 +44,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
 // handling users roles
 exports.authorizeRoles = (role) => {
-  let allRoles = roles[role];
+  let allRoles = permissionRef[role];
   return (req, res, next) => {
     //If role is guest you can let through
 
