@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
-const User = require("../models/user");
+const { locations } = require("../util/locations");
+const { bandRoles } = require("../util/bandRoles");
+const { events } = require("../util/events");
+const Schema = mongoose.Schema;
 
-const worshipTeam = mongoose.Schema({
+const worshipTeamSchema = mongoose.Schema({
   id: String,
   name: String,
   wtPrimaryRole: {
     type: String,
     trim: true,
     enum: {
-      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+      values: bandRoles,
       message: "Please select valid worship team role.",
     },
   },
@@ -16,7 +19,7 @@ const worshipTeam = mongoose.Schema({
     type: String,
     trim: true,
     enum: {
-      values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+      values: bandRoles,
       message: "Please select valid worship team role.",
     },
   },
@@ -26,24 +29,24 @@ const worshipTeam = mongoose.Schema({
   },
 });
 
-const plannedLocationRoster = mongoose.Schema({
+const locationRosterSchema = mongoose.Schema({
   location: {
     type: String,
     trim: true,
     enum: {
-      values: ["central", "north", "south", "east", "west"],
+      values: locations,
       message: "Please select valid location",
     },
   },
-  worshipTeam: { worshipTeam },
+  worshipTeam: { worshipTeamSchema },
 });
 
-const requiredDates = new mongoose.Schema({
+const requiredDatesSchema = new mongoose.Schema({
   eventName: {
     type: String,
     trim: true,
     enum: {
-      values: ["sunday", "kids-conference", "bible-college", "other"],
+      values: events,
       message: "Event name is not available",
     },
   },
@@ -51,28 +54,36 @@ const requiredDates = new mongoose.Schema({
     type: String,
   },
   eventDate: {
-    type: String,
+    type: Date,
     required: true,
   },
 });
 
-const submissions = new mongoose.Schema({
-  userId: String,
-  hasSubmittedDates: { type: Boolean, default: false },
-  submittedDates: [requiredDates],
+const datesGivenSchema = new mongoose.Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  hasGivenDates: { type: Boolean, default: false },
+  givenDates: [requiredDatesSchema],
 });
 
 const RosterSchema = new mongoose.Schema(
   {
     month: {
-      type: String,
-      required: [true, "Please enter the month and year of the roster"],
+      type: Date,
+      required: [
+        true,
+        "Please enter the month and year of the roster in the format MM/YYYY",
+      ],
       unique: true,
     },
-    name: String,
     requiredDates: [requiredDates],
-    submissions: [submissions],
-    roster: [plannedLocationRoster],
+    datesGiven: [datesGivenSchema],
+    roster: [locationRosterSchema],
+    giveDatesUsingUrl: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

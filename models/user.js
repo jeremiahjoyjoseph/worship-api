@@ -4,6 +4,9 @@ const slugify = require("slugify");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { roles, defaultRole } = require("../util/roles");
+const { bandRoles } = require("../util/bandRoles");
+const { locations } = require("../util/locations");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -71,16 +74,8 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Please enter your role in the team"],
       enum: {
-        values: [
-          "admin",
-          "worship-pastor",
-          "worship-leader",
-          "worship-team-member",
-          "media-team",
-          "sound-team",
-          "guest",
-        ],
-        default: "guest",
+        values: roles,
+        default: defaultRole,
         message: "Please select valid role.",
       },
     },
@@ -102,7 +97,7 @@ const UserSchema = new mongoose.Schema(
         "Please enter primary role in worship team",
       ],
       enum: {
-        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        values: bandRoles,
         message: "Please select valid worship team role.",
       },
     },
@@ -110,7 +105,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        values: bandRoles,
         message: "Please select valid worship team role.",
       },
     },
@@ -118,7 +113,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: ["singing", "drums", "keys", "acoustic", "bass", "electric"],
+        values: bandRoles,
         message: "Please select valid worship team role.",
       },
     },
@@ -135,10 +130,6 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       trim: true,
       required: [true, "please enter date of birth"],
-      enum: {
-        values: ["male", "female"],
-        message: "Please choose relevant gender.",
-      },
     },
     md: {
       type: Boolean,
@@ -168,7 +159,7 @@ const UserSchema = new mongoose.Schema(
         "Please enter primary location",
       ],
       enum: {
-        values: ["central", "north", "south", "east", "west"],
+        values: locations,
         message: "Please select valid location",
       },
     },
@@ -176,7 +167,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: ["central", "north", "south", "east", "west"],
+        values: locations,
         message: "Please select valid location",
       },
     },
@@ -184,7 +175,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: ["central", "north", "south", "east", "west"],
+        values: locations,
         message: "Please select valid location",
       },
     },

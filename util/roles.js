@@ -1,4 +1,4 @@
-module.exports = Object.freeze({
+const permissionRef = Object.freeze({
   all: [
     "admin",
     "worship-pastor",
@@ -42,3 +42,21 @@ module.exports = Object.freeze({
     "guest",
   ],
 });
+
+const roles = Object.freeze([
+  "admin",
+  "worship-pastor",
+  "worship-leader",
+  "worship-team-member",
+  "media-team",
+  "sound-team",
+  "guest",
+]);
+
+const defaultRole = Object.freeze("guest");
+
+module.exports = {
+  permissionRef,
+  roles,
+  defaultRole,
+};
