@@ -19,17 +19,17 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
 
   //retrieve all users and create slots in roster.submissions
   let users = await User.find();
-  let submissions = [];
+  let datesGiven = [];
   users.forEach((user) => {
     if (user.status === "active") {
-      submissions.push({
+      datesGiven.push({
         userId: user._id,
         hasSubmittedDates: false,
         submittedDates: [],
       });
     }
   });
-  body.submissions = submissions;
+  body.datesGiven = datesGiven;
 
   //create roster
   let roster = await Roster.create({
@@ -43,7 +43,7 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Every individual submits their availability  => /roster/availability/:rosterId
+//Every individual submits their availability  => /roster/availability/:rosterId/:userId
 exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
   if (!req.params.rosterId) {
     return next(
@@ -62,28 +62,28 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
 
   //find out if user has already given dates,
   //if not lets record dates submitted
-  let userSubmission = roster.submissions.find(
-    (submission) => submission.userId === req.user.id
+  let usersGivenDates = roster.datesGiven.find(
+    (dateGiven) => dateGiven.userId === req.params.userId
   );
-  if (userSubmission.hasSubmittedDates) {
+  if (usersGivenDates.hasGivenDates) {
     return next(
       new ErrorHandler(
-        "User has already submitted dates for this roster",
+        "User has already given dates for this roster",
         BAD_REQUEST
       )
     );
   } else {
-    userSubmission.hasSubmittedDates = true;
-    userSubmission.submittedDates = req.body.submittedDates;
+    userSubmission.hasGivenDates = true;
+    userSubmission.availableDays = req.body.availableDays;
   }
 
   //let us update the roster submission document of that user
-  let submissionToUpdate = roster.submissions.findIndex(
-    (submission) => submission.userId === req.user.id
+  let givenDateToUpdate = roster.givenDates.findIndex(
+    (dateGiven) => dateGiven.userId === req.params.userId
   );
-  roster.submissions[submissionToUpdate] = userSubmission;
+  roster.datesGiven[givenDateToUpdate] = usersGivenDates;
 
-  let newRoster = await Roster.findByIdAndUpdate(req.params.id, roster, {
+  let newRoster = await Roster.findByIdAndUpdate(req.params.rosterId, roster, {
     new: true,
     runValidators: true,
   });
@@ -91,7 +91,7 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
   res.status(SUCCESS).json({
     success: true,
     message: "Availability has been submitted, thank you for your service",
-    data: newRoster,
+    data: usersGivenDates,
   });
 });
 

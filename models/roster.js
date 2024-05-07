@@ -49,12 +49,13 @@ const requiredDatesSchema = new mongoose.Schema({
       values: events,
       message: "Event name is not available",
     },
+    required: true,
   },
   sermonTopic: {
     type: String,
   },
   eventDate: {
-    type: Date,
+    type: String,
     required: true,
   },
 });
@@ -71,7 +72,7 @@ const datesGivenSchema = new mongoose.Schema({
 const RosterSchema = new mongoose.Schema(
   {
     month: {
-      type: Date,
+      type: String,
       required: [
         true,
         "Please enter the month and year of the roster in the format MM/YYYY",

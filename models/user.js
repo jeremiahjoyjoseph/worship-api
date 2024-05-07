@@ -137,9 +137,9 @@ const UserSchema = new mongoose.Schema(
       },
     },
     dob: {
-      type: Date,
+      type: String,
       trim: true,
-      required: [true, "please enter date of birth"],
+      required: [true, "please enter date of birth, DD/MM"],
     },
     md: {
       type: Boolean,
