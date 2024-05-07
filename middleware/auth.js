@@ -7,7 +7,7 @@ const {
   UNAUTHORIZED_ROLE,
   NOT_FOUND,
 } = require("../util/httpStatusCodes");
-const { permissionRef } = require("../util/roles");
+const { permissionRef } = require("../config/roles");
 
 // Check if the user is authenticated or not
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {

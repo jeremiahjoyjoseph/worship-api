@@ -7,7 +7,7 @@ const instruments = Object.freeze([
 ]);
 
 const bandRoles = Object.freeze([
-  "singing",
+  "vocals",
   "drums",
   "keys",
   "acoustic",

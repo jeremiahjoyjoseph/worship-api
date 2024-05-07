@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { locations } = require("../util/locations");
-const { bandRoles } = require("../util/bandRoles");
-const { events } = require("../util/events");
+const { locations } = require("../config/locations");
+const { bandRoles } = require("../config/bandRoles");
+const { events } = require("../config/events");
 const Schema = mongoose.Schema;
 
 const worshipTeamSchema = mongoose.Schema({

@@ -4,9 +4,9 @@ const slugify = require("slugify");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { roles, defaultRole } = require("../util/roles");
-const { bandRoles } = require("../util/bandRoles");
-const { locations } = require("../util/locations");
+const { roles, defaultRole } = require("../config/roles");
+const { bandRoles } = require("../config/bandRoles");
+const { locations } = require("../config/locations");
 
 const UserSchema = new mongoose.Schema(
   {

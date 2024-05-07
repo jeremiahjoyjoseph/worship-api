@@ -48,7 +48,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
   //convert dob to date type
   if (body.dob) {
-    body.dob = moment(body.dob).toDate();
+    body.dob = moment(body.dob, process.env.FE_DATE_FORMAT).toDate();
   }
 
   const user = await User.create({
