@@ -63,7 +63,7 @@ const UserSchema = new mongoose.Schema(
         8,
         "Your password must be at least 8 characters long, its for your own safety",
       ],
-      select: false, //Hidden for normal responses.
+      select: true, //Hidden for normal responses.
     },
     createdAt: {
       type: Date,
@@ -116,6 +116,11 @@ const UserSchema = new mongoose.Schema(
         values: bandRoles,
         message: "Please select valid worship team role.",
       },
+    },
+    allBandRoles: {
+      type: Boolean,
+      default: false,
+      select: true, //Hidden for normal responses.
     },
     gender: {
       type: String,
@@ -178,6 +183,11 @@ const UserSchema = new mongoose.Schema(
         values: locations,
         message: "Please select valid location",
       },
+    },
+    allLocations: {
+      type: Boolean,
+      default: false,
+      select: true, //Hidden for normal responses.
     },
     slug: String,
     resetPasswordToken: String,
