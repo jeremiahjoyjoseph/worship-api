@@ -55,7 +55,11 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     ...body,
   });
 
-  sendToken(user, SUCCESS, res);
+  res.status(SUCCESS).json({
+    success: true,
+    message: "User created",
+    data: user,
+  });
 });
 
 //Log out user
