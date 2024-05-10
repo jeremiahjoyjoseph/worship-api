@@ -9,6 +9,7 @@ const {
   BAD_REQUEST,
   UNAUTHORIZED,
   NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
 } = require("../util/httpStatusCodes");
 
 const moment = require("moment");
@@ -24,6 +25,7 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
     if (user.status === "active") {
       datesGiven.push({
         userId: user._id,
+        userData: user,
         hasSubmittedDates: false,
         submittedDates: [],
       });
@@ -129,4 +131,30 @@ exports.getRoster = catchAsyncErrors(async (req, res, next) => {
     message: "Here is the roster",
     data: roster,
   });
+});
+
+//Get roster  => /roster or through query month or id
+exports.deleteRoster = catchAsyncErrors(async (req, res, next) => {
+  //lets get the roster first
+  try {
+    // Find the roster by ID and delete it
+    const deleteRoster = await Roster.findByIdAndDelete(req.params.rosterId);
+
+    // Check if the post exists
+    if (!deleteRoster) {
+      return next(new ErrorHandler("Roster not found", NOT_FOUND));
+    }
+
+    // Send a success response
+    res.status(SUCCESS).json({
+      success: true,
+      message: "Roster has been deleted",
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "Roster deletion failed",
+    });
+  }
 });

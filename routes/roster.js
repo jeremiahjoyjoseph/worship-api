@@ -7,6 +7,7 @@ const {
   submitAvailability,
   getAllRosters,
   getRoster,
+  deleteRoster,
 } = require("../controllers/rosterController");
 
 //Team members
@@ -32,5 +33,8 @@ router
 router
   .route("/roster/generate")
   .post(isAuthenticatedUser, authorizeRoles("worship-pastor"), generateRoster);
+router
+  .route("/roster/delete/:rosterId")
+  .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteRoster);
 
 module.exports = router;

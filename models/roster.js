@@ -49,6 +49,7 @@ const requiredDatesSchema = new mongoose.Schema({
       values: events,
       message: "Event name is not available",
     },
+    default: "other",
     required: true,
   },
   sermonTopic: {

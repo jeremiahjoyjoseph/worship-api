@@ -68,7 +68,7 @@ const UserSchema = new mongoose.Schema(
         8,
         "Your password must be at least 8 characters long, its for your own safety",
       ],
-      select: true, //Hidden for normal responses.
+      select: false, //Hidden by default if false
     },
     createdAt: {
       type: Date,
@@ -86,7 +86,6 @@ const UserSchema = new mongoose.Schema(
     },
     lastLogInDate: {
       type: Date,
-      select: false,
     },
     wtRolePrimary: {
       type: String,
@@ -125,7 +124,7 @@ const UserSchema = new mongoose.Schema(
     allBandRoles: {
       type: Boolean,
       default: false,
-      select: true, //Hidden for normal responses.
+      select: false, //Hidden by default if false
     },
     gender: {
       type: String,
