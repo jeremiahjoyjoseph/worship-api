@@ -30,7 +30,7 @@ const worshipTeamSchema = mongoose.Schema({
 });
 
 const locationRosterSchema = mongoose.Schema({
-  location: {
+  locationName: {
     type: String,
     trim: true,
     enum: {
@@ -66,6 +66,7 @@ const datesGivenSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  userData: { type: Object },
   hasGivenDates: { type: Boolean, default: false },
   givenDates: [requiredDatesSchema],
 });

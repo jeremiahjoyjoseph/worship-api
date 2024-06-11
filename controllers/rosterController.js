@@ -62,30 +62,20 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Roster not found", NOT_FOUND));
   }
 
-  //find out if user has already given dates,
-  //if not lets record dates submitted
-  let usersGivenDates = roster.datesGiven.find(
-    (dateGiven) => dateGiven.userId === req.params.userId
-  );
-  if (usersGivenDates.hasGivenDates) {
-    return next(
-      new ErrorHandler(
-        "User has already given dates for this roster",
-        BAD_REQUEST
-      )
-    );
-  } else {
-    userSubmission.hasGivenDates = true;
-    userSubmission.availableDays = req.body.availableDays;
-  }
+  let userSubmission = {};
+  userSubmission.hasGivenDates = true;
+  userSubmission.givenDates = req.body.submittedDates;
 
   //let us update the roster submission document of that user
-  let givenDateToUpdate = roster.givenDates.findIndex(
-    (dateGiven) => dateGiven.userId === req.params.userId
+  let userToUpdate = roster.datesGiven.findIndex(
+    (x) => x.userId === req.params.userId
   );
-  roster.datesGiven[givenDateToUpdate] = usersGivenDates;
+  roster.datesGiven[userToUpdate] = {
+    ...roster.datesGiven[userToUpdate],
+    ...userSubmission,
+  };
 
-  let newRoster = await Roster.findByIdAndUpdate(req.params.rosterId, roster, {
+  await Roster.findByIdAndUpdate(req.params.rosterId, roster, {
     new: true,
     runValidators: true,
   });
@@ -93,6 +83,37 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
   res.status(SUCCESS).json({
     success: true,
     message: "Availability has been submitted, thank you for your service",
+    data: usersGivenDates,
+  });
+});
+
+//Check already submitted dates  => /roster/submitted/:rosterId/:userId
+exports.givenDates = catchAsyncErrors(async (req, res, next) => {
+  if (!req.params.rosterId) {
+    return next(
+      new ErrorHandler(
+        "Link is corrupted, please ask WP for a new link",
+        NOT_FOUND
+      )
+    );
+  }
+
+  //lets get the roster first
+  let roster = await Roster.findById(req.params.rosterId);
+  if (!roster) {
+    return next(new ErrorHandler("Roster not found", NOT_FOUND));
+  }
+
+  //find out if user has already given dates
+  let usersGivenDates = roster.datesGiven.find(
+    (x) => x.userId === req.params.userId
+  );
+
+  console.log({ usersGivenDates });
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Submitted dates",
     data: usersGivenDates,
   });
 });
@@ -133,7 +154,7 @@ exports.getRoster = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Get roster  => /roster or through query month or id
+//Delete roster -> /roster/delete/:rosterId
 exports.deleteRoster = catchAsyncErrors(async (req, res, next) => {
   //lets get the roster first
   try {
