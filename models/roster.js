@@ -41,7 +41,7 @@ const locationRosterSchema = mongoose.Schema({
   worshipTeam: { worshipTeamSchema },
 });
 
-const requiredDatesSchema = new mongoose.Schema({
+const rosterDateSchema = new mongoose.Schema({
   eventName: {
     type: String,
     trim: true,
@@ -61,14 +61,11 @@ const requiredDatesSchema = new mongoose.Schema({
   },
 });
 
-const datesGivenSchema = new mongoose.Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
+const submissionsSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
   userData: { type: Object },
-  hasGivenDates: { type: Boolean, default: false },
-  givenDates: [requiredDatesSchema],
+  hasSubmittedDates: { type: Boolean, default: false },
+  submittedDates: [rosterDateSchema],
 });
 
 const RosterSchema = new mongoose.Schema(
@@ -81,8 +78,8 @@ const RosterSchema = new mongoose.Schema(
       ],
       unique: true,
     },
-    requiredDates: [requiredDatesSchema],
-    datesGiven: [datesGivenSchema],
+    requiredDates: [rosterDateSchema],
+    submissions: [submissionsSchema],
     roster: [locationRosterSchema],
     giveDatesUsingUrl: {
       type: String,

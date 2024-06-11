@@ -8,7 +8,7 @@ const {
   getAllRosters,
   getRoster,
   deleteRoster,
-  givenDates,
+  usersSubmittedDates,
 } = require("../controllers/rosterController");
 
 //Team members
@@ -32,7 +32,11 @@ router
 
 router
   .route("/roster/submitted/:rosterId/:userId")
-  .get(isAuthenticatedUser, authorizeRoles("worship-team-member"), givenDates);
+  .get(
+    isAuthenticatedUser,
+    authorizeRoles("worship-team-member"),
+    usersSubmittedDates
+  );
 
 //Worship pastor and above only
 router

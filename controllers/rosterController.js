@@ -6,8 +6,6 @@ const ErrorHandler = require("../util/errorHandler");
 
 const {
   SUCCESS,
-  BAD_REQUEST,
-  UNAUTHORIZED,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require("../util/httpStatusCodes");
@@ -20,10 +18,10 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
 
   //retrieve all users and create slots in roster.submissions
   let users = await User.find();
-  let datesGiven = [];
+  let submissions = [];
   users.forEach((user) => {
     if (user.status === "active") {
-      datesGiven.push({
+      submissions.push({
         userId: user._id,
         userData: user,
         hasSubmittedDates: false,
@@ -31,7 +29,7 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
       });
     }
   });
-  body.datesGiven = datesGiven;
+  body.submissions = submissions;
 
   //create roster
   let roster = await Roster.create({
@@ -42,6 +40,35 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
     success: true,
     message: "Roster has been generated",
     data: roster,
+  });
+});
+
+//Check already submitted dates  => /roster/submitted/:rosterId/:userId
+exports.usersSubmittedDates = catchAsyncErrors(async (req, res, next) => {
+  if (!req.params.rosterId) {
+    return next(
+      new ErrorHandler(
+        "Link is corrupted, please ask WP for a new link",
+        NOT_FOUND
+      )
+    );
+  }
+
+  //lets get the roster first
+  let roster = await Roster.findById(req.params.rosterId);
+  if (!roster) {
+    return next(new ErrorHandler("Roster not found", NOT_FOUND));
+  }
+
+  //find out if user has already given dates
+  let userSubmission = roster.submissions.find(
+    (x) => x.userId === req.params.userId
+  );
+
+  res.status(SUCCESS).json({
+    success: true,
+    message: "Submitted dates",
+    data: userSubmission.submittedDates,
   });
 });
 
@@ -63,15 +90,16 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
   }
 
   let userSubmission = {};
-  userSubmission.hasGivenDates = true;
-  userSubmission.givenDates = req.body.submittedDates;
+  userSubmission.hasSubmittedDates = true;
+  userSubmission.submittedDates = req.body.submittedDates;
 
   //let us update the roster submission document of that user
-  let userToUpdate = roster.datesGiven.findIndex(
+  let userToUpdate = roster.submissions.findIndex(
     (x) => x.userId === req.params.userId
   );
-  roster.datesGiven[userToUpdate] = {
-    ...roster.datesGiven[userToUpdate],
+
+  roster.submissions[userToUpdate] = {
+    ...roster.submissions[userToUpdate].toObject(),
     ...userSubmission,
   };
 
@@ -82,39 +110,8 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
 
   res.status(SUCCESS).json({
     success: true,
-    message: "Availability has been submitted, thank you for your service",
-    data: usersGivenDates,
-  });
-});
-
-//Check already submitted dates  => /roster/submitted/:rosterId/:userId
-exports.givenDates = catchAsyncErrors(async (req, res, next) => {
-  if (!req.params.rosterId) {
-    return next(
-      new ErrorHandler(
-        "Link is corrupted, please ask WP for a new link",
-        NOT_FOUND
-      )
-    );
-  }
-
-  //lets get the roster first
-  let roster = await Roster.findById(req.params.rosterId);
-  if (!roster) {
-    return next(new ErrorHandler("Roster not found", NOT_FOUND));
-  }
-
-  //find out if user has already given dates
-  let usersGivenDates = roster.datesGiven.find(
-    (x) => x.userId === req.params.userId
-  );
-
-  console.log({ usersGivenDates });
-
-  res.status(SUCCESS).json({
-    success: true,
-    message: "Submitted dates",
-    data: usersGivenDates,
+    message: "Availability has been submitted",
+    data: userSubmission.submittedDates,
   });
 });
 
