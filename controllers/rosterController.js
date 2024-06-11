@@ -1,6 +1,5 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Roster = require("../models/roster");
-const user = require("../models/user");
 const User = require("../models/user");
 const ErrorHandler = require("../util/errorHandler");
 
@@ -9,8 +8,6 @@ const {
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require("../util/httpStatusCodes");
-
-const moment = require("moment");
 
 //Generate roster by selecting month  => /roster/generate
 exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
