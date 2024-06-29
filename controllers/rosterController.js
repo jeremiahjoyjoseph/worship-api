@@ -28,17 +28,22 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
   body.submissions = submissions;
 
-  let rosterUrl = new URL(
-    `/submit-dates/${body.month.replace("/", "-")}`,
-    process.env.CLIENT_DOMAIN
-  );
-
-  body.rosterUrl = rosterUrl;
-
   //create roster
   let roster = await Roster.create({
     ...body,
   });
+
+  let rosterUrl = new URL(
+    `/submit-availability/${roster._id}`,
+    process.env.CLIENT_DOMAIN
+  ).toString();
+
+  // Update the roster with the generated URL
+  roster = await Roster.findByIdAndUpdate(
+    roster._id,
+    { rosterUrl: rosterUrl },
+    { new: true } // Return the updated document
+  );
 
   res.status(SUCCESS).json({
     success: true,
@@ -93,18 +98,21 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Roster not found", NOT_FOUND));
   }
 
-  let userSubmission = {};
-  userSubmission.hasSubmittedDates = true;
-  userSubmission.submittedDates = req.body.submittedDates;
-
-  //let us update the roster submission document of that user
-  let userToUpdate = roster.submissions.findIndex(
-    (x) => x.userId === req.params.userId
+  // Find the index of the submission by userId
+  const submissionIndex = roster.submissions.findIndex(
+    (sub) => sub.userId === req.params.userId
   );
+  if (submissionIndex === -1) {
+    return next(
+      new ErrorHandler("Submission not found for the given userId", NOT_FOUND)
+    );
+  }
 
-  roster.submissions[userToUpdate] = {
-    ...roster.submissions[userToUpdate].toObject(),
-    ...userSubmission,
+  // Update the submission with new data
+  roster.submissions[submissionIndex] = {
+    ...roster.submissions[submissionIndex]._doc, // Keep other properties intact
+    hasSubmittedDates: true,
+    submittedDates: req.body,
   };
 
   await Roster.findByIdAndUpdate(req.params.rosterId, roster, {
@@ -115,7 +123,7 @@ exports.submitAvailability = catchAsyncErrors(async (req, res, next) => {
   res.status(SUCCESS).json({
     success: true,
     message: "Availability has been submitted",
-    data: userSubmission.submittedDates,
+    data: roster.submissions[submissionIndex],
   });
 });
 

@@ -19,16 +19,8 @@ router
     authorizeRoles("worship-team-member"),
     getAllRosters
   );
-router
-  .route("/roster")
-  .get(isAuthenticatedUser, authorizeRoles("worship-team-member"), getRoster);
-router
-  .route("/roster/availability/:rosterId/:userId")
-  .post(
-    isAuthenticatedUser,
-    authorizeRoles("worship-team-member"),
-    submitAvailability
-  );
+router.route("/roster").get(getRoster);
+router.route("/roster/availability/:rosterId/:userId").post(submitAvailability);
 
 router
   .route("/roster/submitted/:rosterId/:userId")

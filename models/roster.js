@@ -94,7 +94,6 @@ const RosterSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} is not a valid URL!`,
       },
-      required: [true, "Roster URL is required"],
     },
   },
   { timestamps: true }
