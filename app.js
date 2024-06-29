@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 const dotenv = require("dotenv");
@@ -36,6 +37,9 @@ app.use(cookieParser());
 
 //for file uploads
 app.use(fileUpload());
+
+//for cors
+app.use(cors());
 
 //Use rate limit NOT WORKING
 const limiter = rateLimit({

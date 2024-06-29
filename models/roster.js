@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { locations } = require("../config/locations");
 const { bandRoles } = require("../config/bandRoles");
 const { events } = require("../config/events");
-const Schema = mongoose.Schema;
+const validator = require("validator");
 
 const worshipTeamSchema = mongoose.Schema({
   id: String,
@@ -81,8 +81,20 @@ const RosterSchema = new mongoose.Schema(
     requiredDates: [rosterDateSchema],
     submissions: [submissionsSchema],
     roster: [locationRosterSchema],
-    giveDatesUsingUrl: {
+    rosterUrl: {
       type: String,
+      validate: {
+        validator: function (v) {
+          return validator.isURL(v, {
+            protocols: ["http", "https"],
+            require_protocol: true,
+            require_tld: false, // This allows URLs without a top-level domain, like localhost
+            allow_underscores: true,
+          });
+        },
+        message: (props) => `${props.value} is not a valid URL!`,
+      },
+      required: [true, "Roster URL is required"],
     },
   },
   { timestamps: true }

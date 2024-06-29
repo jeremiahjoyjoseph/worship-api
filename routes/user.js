@@ -14,7 +14,7 @@ const {
 } = require("../controllers/UserController");
 
 router.route("/user/data").get(isAuthenticatedUser, getUserProfile);
-router.route("/user/all").get(isAuthenticatedUser, getAllUsers);
+router.route("/user/all").get(getAllUsers);
 router.route("/user/update/username").put(isAuthenticatedUser, updateUsername);
 router.route("/user/update/password").put(isAuthenticatedUser, updatePassword);
 router.route("/user/delete").delete(isAuthenticatedUser, deleteSelf);

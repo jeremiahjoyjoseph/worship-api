@@ -28,6 +28,13 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
   body.submissions = submissions;
 
+  let rosterUrl = new URL(
+    `/submit-dates/${body.month.replace("/", "-")}`,
+    process.env.CLIENT_DOMAIN
+  );
+
+  body.rosterUrl = rosterUrl;
+
   //create roster
   let roster = await Roster.create({
     ...body,
