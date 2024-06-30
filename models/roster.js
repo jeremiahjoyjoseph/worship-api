@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { locations } = require("../config/locations");
 const { bandRoles } = require("../config/bandRoles");
-const { events } = require("../config/events");
+const { LocationSchema } = require("./location");
 const validator = require("validator");
 
 const worshipTeamSchema = mongoose.Schema({
@@ -30,7 +30,7 @@ const worshipTeamSchema = mongoose.Schema({
 });
 
 const locationRosterSchema = mongoose.Schema({
-  locationName: {
+  location: {
     type: String,
     trim: true,
     enum: {
@@ -42,23 +42,39 @@ const locationRosterSchema = mongoose.Schema({
 });
 
 const rosterDateSchema = new mongoose.Schema({
-  eventName: {
-    type: String,
-    trim: true,
-    enum: {
-      values: events,
-      message: "Event name is not available",
-    },
-    default: "other",
-    required: true,
-  },
-  sermonTopic: {
-    type: String,
-  },
   eventDate: {
     type: String,
     required: true,
   },
+  eventName: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  minAge: {
+    type: Number,
+  },
+  maxAge: {
+    type: Number,
+  },
+  isSunday: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  sermonTopic: {
+    type: String,
+    required: [
+      function () {
+        return this.isSunday === true;
+      },
+      "Please Provide Sermon Topic",
+    ],
+  },
+  sermonNote: {
+    type: String,
+  },
+  location: [LocationSchema],
 });
 
 const submissionsSchema = new mongoose.Schema({

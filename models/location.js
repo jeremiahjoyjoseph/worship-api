@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
-export const LocationSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
+const LocationSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
   },
-  { timestamps: true }
-);
+});
 
-module.exports = mongoose.model("Location", LocationSchema);
+const Location = mongoose.model("Location", LocationSchema);
+module.exports = { Location, LocationSchema };

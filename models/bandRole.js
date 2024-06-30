@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 
-export const BandRoleSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
+const BandRoleSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    trim: true,
+    require: true,
   },
-  { timestamps: true }
-);
+});
 
-module.exports = mongoose.model("BandRole", BandRoleSchema);
+const BandRole = mongoose.model("BandRole", BandRoleSchema);
+module.exports = { BandRole, BandRoleSchema };
