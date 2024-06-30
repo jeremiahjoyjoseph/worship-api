@@ -12,18 +12,18 @@ const {
 } = require("../controllers/rosterController");
 
 //Team members
+router.route("").get(getRoster);
 router
-  .route("/roster/all")
+  .route("/all")
   .get(
     isAuthenticatedUser,
     authorizeRoles("worship-team-member"),
     getAllRosters
   );
-router.route("/roster").get(getRoster);
-router.route("/roster/availability/:rosterId/:userId").post(submitAvailability);
+router.route("/availability/:rosterId/:userId").post(submitAvailability);
 
 router
-  .route("/roster/submitted/:rosterId/:userId")
+  .route("/submitted/:rosterId/:userId")
   .get(
     isAuthenticatedUser,
     authorizeRoles("worship-team-member"),
@@ -32,10 +32,10 @@ router
 
 //Worship pastor and above only
 router
-  .route("/roster/generate")
+  .route("/generate")
   .post(isAuthenticatedUser, authorizeRoles("worship-pastor"), generateRoster);
 router
-  .route("/roster/delete/:rosterId")
+  .route("/delete/:rosterId")
   .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteRoster);
 
 module.exports = router;

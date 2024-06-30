@@ -56,11 +56,13 @@ const song = require("./routes/song");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const roster = require("./routes/roster");
+const event = require("./routes/event");
 
-app.use("/api/v1", auth);
-app.use("/api/v1", song);
-app.use("/api/v1", user);
-app.use("/api/v1", roster);
+app.use("/auth", auth);
+app.use("/song", song);
+app.use("/user", user);
+app.use("/roster", roster);
+app.use("/event", event);
 
 //Handling error in urls/routes
 app.all("*", (req, res, next) => {
