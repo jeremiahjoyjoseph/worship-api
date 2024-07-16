@@ -34,7 +34,7 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   });
 
   let rosterUrl = new URL(
-    `/submit-availability/${roster._id}`,
+    `/submit/availability/${roster._id}`,
     process.env.CLIENT_DOMAIN
   ).toString();
 

@@ -57,12 +57,14 @@ const auth = require("./routes/auth");
 const user = require("./routes/user");
 const roster = require("./routes/roster");
 const event = require("./routes/event");
+const location = require("./routes/location");
 
 app.use("/auth", auth);
 app.use("/song", song);
 app.use("/user", user);
 app.use("/roster", roster);
 app.use("/event", event);
+app.use("/location", location);
 
 //Handling error in urls/routes
 app.all("*", (req, res, next) => {

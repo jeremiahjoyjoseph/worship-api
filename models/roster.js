@@ -46,6 +46,10 @@ const rosterDateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  eventEndDate: {
+    type: String,
+    required: true,
+  },
   eventName: {
     type: String,
     trim: true,
