@@ -31,12 +31,7 @@ const worshipTeamSchema = mongoose.Schema({
 
 const locationRosterSchema = mongoose.Schema({
   location: {
-    type: String,
-    trim: true,
-    enum: {
-      values: locations,
-      message: "Please select valid location",
-    },
+    LocationSchema,
   },
   worshipTeam: { worshipTeamSchema },
 });
@@ -48,7 +43,6 @@ const rosterDateSchema = new mongoose.Schema({
   },
   eventEndDate: {
     type: String,
-    required: true,
   },
   eventName: {
     type: String,
@@ -90,14 +84,6 @@ const submissionsSchema = new mongoose.Schema({
 
 const RosterSchema = new mongoose.Schema(
   {
-    month: {
-      type: String,
-      required: [
-        true,
-        "Please enter the month and year of the roster in the format MM/YYYY",
-      ],
-      unique: true,
-    },
     requiredDates: [rosterDateSchema],
     submissions: [submissionsSchema],
     roster: [locationRosterSchema],

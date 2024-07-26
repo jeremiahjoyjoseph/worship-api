@@ -13,13 +13,7 @@ const {
 
 //Team members
 router.route("").get(getRoster);
-router
-  .route("/all")
-  .get(
-    isAuthenticatedUser,
-    authorizeRoles("worship-team-member"),
-    getAllRosters
-  );
+router.route("/all").get(getAllRosters);
 router.route("/availability/:rosterId/:userId").post(submitAvailability);
 
 router
