@@ -1,3 +1,4 @@
+const moment = require("moment");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Roster = require("../models/roster");
 const User = require("../models/user");
@@ -9,12 +10,35 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require("../util/httpStatusCodes");
 
+function getAllSundays(year, month) {
+  let sundays = [];
+  let date = moment(`${year}-${month}-01`, "YYYY-MM-DD");
+
+  // Start at the first Sunday of the month
+  while (date.month() + 1 === month) {
+    if (date.day() === 0) {
+      // 0 corresponds to Sunday
+      sundays.push(date.format("YYYY-MM-DD")); // Format as 'YYYY-MM-DD' string
+    }
+    date.add(1, "days"); // Move to the next day
+  }
+
+  return sundays;
+}
+
 //Generate roster by selecting month  => /roster/generate
 exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
   let body = req.body;
 
   //retrieve all users and create slots in roster.submissions
-  let users = await User.find();
+  let users;
+  try {
+    users = await User.find().select(
+      "-password -email -phone -dob -createdAt -updatedAt -slug --v"
+    );
+  } catch (error) {
+    console.log("Generate Roster Get Users Error", error);
+  }
   let submissions = [];
   users.forEach((user) => {
     if (user.status === "active") {
@@ -27,6 +51,10 @@ exports.generateRoster = catchAsyncErrors(async (req, res, next) => {
     }
   });
   body.submissions = submissions;
+
+  let requiredDates = getAllSundays(body.year, body.month);
+
+  body.requiredDates = requiredDates;
 
   //create roster
   let roster = await Roster.create({

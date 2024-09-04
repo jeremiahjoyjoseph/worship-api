@@ -25,58 +25,61 @@ const locationRosterSchema = mongoose.Schema({
   worshipTeam: { worshipTeamSchema },
 });
 
-const rosterDateSchema = new mongoose.Schema({
-  eventDate: {
-    type: String,
-    required: true,
-  },
-  eventEndDate: {
-    type: String,
-  },
-  eventName: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  minAge: {
-    type: Number,
-  },
-  maxAge: {
-    type: Number,
-  },
-  isSunday: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
-  sermonTopic: {
-    type: String,
-    required: [
-      function () {
-        return this.isSunday === true;
-      },
-      "Please Provide Sermon Topic",
-    ],
-  },
-  sermonNote: {
-    type: String,
-  },
-  location: [LocationSchema],
-});
+// const rosterDateSchema = new mongoose.Schema({
+//   eventDate: {
+//     type: String,
+//     required: true,
+//   },
+//   eventEndDate: {
+//     type: String,
+//   },
+//   eventName: {
+//     type: String,
+//     trim: true,
+//     required: true,
+//   },
+//   minAge: {
+//     type: Number,
+//   },
+//   maxAge: {
+//     type: Number,
+//   },
+//   isSunday: {
+//     type: Boolean,
+//     default: true,
+//     required: true,
+//   },
+//   sermonTopic: {
+//     type: String,
+//   },
+//   sermonNote: {
+//     type: String,
+//   },
+//   location: [LocationSchema],
+// });
 
 const submissionsSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   userData: { type: Object },
   hasSubmittedDates: { type: Boolean, default: false },
-  submittedDates: [rosterDateSchema],
+  submittedDates: [],
 });
 
 const RosterSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
     },
-    requiredDates: [rosterDateSchema],
+    month: {
+      type: Number,
+      required: true,
+    },
+    year: {
+      type: Number,
+      required: true,
+    },
+    requiredDates: [],
     submissions: [submissionsSchema],
     roster: [locationRosterSchema],
     rosterUrl: {
@@ -93,6 +96,7 @@ const RosterSchema = new mongoose.Schema(
         message: (props) => `${props.value} is not a valid URL!`,
       },
     },
+    note: [],
   },
   { timestamps: true }
 );
