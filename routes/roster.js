@@ -25,9 +25,7 @@ router
   );
 
 //Worship pastor and above only
-router
-  .route("/generate")
-  .post(isAuthenticatedUser, authorizeRoles("worship-pastor"), generateRoster);
+router.route("/generate").post(generateRoster);
 router
   .route("/delete/:rosterId")
   .delete(isAuthenticatedUser, authorizeRoles("worship-pastor"), deleteRoster);

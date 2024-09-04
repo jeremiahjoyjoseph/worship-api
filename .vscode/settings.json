@@ -1,3 +1,23 @@
 {
-  "cSpell.words": ["pitstop"]
+  "cSpell.words": ["pitstop"],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#86c6be",
+    "activityBar.background": "#86c6be",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#a252ad",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#86c6be",
+    "statusBar.background": "#63b6ac",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#499d93",
+    "statusBarItem.remoteBackground": "#63b6ac",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#63b6ac",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#63b6ac99",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#63b6ac"
 }

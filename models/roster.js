@@ -1,27 +1,16 @@
 const mongoose = require("mongoose");
-const { locations } = require("../config/locations");
-const { bandRoles } = require("../config/bandRoles");
 const { LocationSchema } = require("./location");
+const { BandRoleSchema } = require("./bandRole");
 const validator = require("validator");
 
 const worshipTeamSchema = mongoose.Schema({
   id: String,
   name: String,
   wtPrimaryRole: {
-    type: String,
-    trim: true,
-    enum: {
-      values: bandRoles,
-      message: "Please select valid worship team role.",
-    },
+    BandRoleSchema,
   },
   wtSecondaryRole: {
-    type: String,
-    trim: true,
-    enum: {
-      values: bandRoles,
-      message: "Please select valid worship team role.",
-    },
+    BandRoleSchema,
   },
   isMd: {
     type: Boolean,
@@ -84,6 +73,9 @@ const submissionsSchema = new mongoose.Schema({
 
 const RosterSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+    },
     requiredDates: [rosterDateSchema],
     submissions: [submissionsSchema],
     roster: [locationRosterSchema],
