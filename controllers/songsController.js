@@ -72,7 +72,7 @@ exports.uploadLyrics = catchAsyncErrors(async (req, res, next) => {
     path.parse(file.name).ext
   }`;
 
-  file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async (err) => {
+  file.mv(`${process.env.UPLOAD_PATH_SONGS}/${file.name}`, async (err) => {
     if (err) {
       console.log(err);
       return next(

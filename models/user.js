@@ -34,7 +34,6 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       trim: true,
-      unique: true,
       required: [
         true,
         "Please enter your email for all the serious communication",
@@ -57,9 +56,7 @@ const UserSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: true,
       trim: true,
-      required: [true, "Please provide unique username."],
     },
     password: {
       type: String,
@@ -109,7 +106,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: bandRoles,
+        values: [...bandRoles, ""],
         message: "Please select valid worship team role.",
       },
     },
@@ -117,7 +114,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: bandRoles,
+        values: [...bandRoles, ""],
         message: "Please select valid worship team role.",
       },
     },
@@ -138,7 +135,6 @@ const UserSchema = new mongoose.Schema(
     dob: {
       type: String,
       trim: true,
-      required: [true, "please enter date of birth, DD/MM"],
     },
     md: {
       type: Boolean,
@@ -176,7 +172,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: locations,
+        values: [...locations, ""],
         message: "Please select valid location",
       },
     },
@@ -184,7 +180,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       enum: {
-        values: locations,
+        values: [...locations, ""],
         message: "Please select valid location",
       },
     },
@@ -207,7 +203,7 @@ UserSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-//Creating user slug before saving
+// Creating user slug before saving
 UserSchema.pre("save", function (next) {
   //Creating slug before saving to DB
   this.slug = slugify(this.username, { lower: true });

@@ -6,6 +6,7 @@ const {
   registerUser,
   loginUser,
   logout,
+  registerUsersFromCSV,
 } = require("../controllers/authController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -16,6 +17,8 @@ router.route("/register/admin").post(registerUser);
 router
   .route("/register")
   .post(isAuthenticatedUser, authorizeRoles("worship-pastor"), registerUser);
+
+router.route("/register/csv").post(registerUsersFromCSV);
 
 //For guest users to log in - not useful to this app
 router.route("/register/guest").post(registerUser);
